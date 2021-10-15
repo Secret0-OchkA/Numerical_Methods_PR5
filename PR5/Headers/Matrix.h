@@ -13,6 +13,7 @@
 #include <iostream>
 #include <vector>
 
+
 class Matrix
 {
 private:
@@ -30,7 +31,7 @@ public:
 	// 1) Сonstructors:
 	Matrix();
 	Matrix(unsigned int rown, unsigned int coln); // инициализирует матрицу по умолчанию заданных размеров (заполненную нулями)
-
+	static void method();
 	// 2) Destructior:
 	~Matrix();
 
