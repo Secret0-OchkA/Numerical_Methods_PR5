@@ -2,6 +2,26 @@
 
 #include "Matrix.h"
 #include "Decomposition.h"
+
+
+class ISolveTusk
+{
+public:
+	virtual void InputData() = 0;
+	virtual void Solve() = 0;
+	virtual void OutputData() = 0;
+};
+
+class Task : public ISolveTusk
+{
+private:
+	void (*method)();
+public:
+	void setMethod(void (*method)());
+
+};
+
+
 class Solver
 {
 private:
@@ -16,3 +36,4 @@ private:
 public:
 	
 };
+
