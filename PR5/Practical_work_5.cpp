@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include "Headers/Matrix.h"
+#include "Headers/Solver.h"
 
 int main()
 {
@@ -16,6 +17,16 @@ int main()
     // 
     // Отключить все макросы необходимо добавив дерективу дял препроцессора в этом файле.
     // Добавление директивы пропусти добавление всех строк содержащих assert.
+
+    // тест солвера
+    Matrix a = Matrix();
+    Matrix b = Matrix();
+
+    Solver solv(a, b, new TaskDecomposition());
+    Matrix* resultPtr = solv.SolveTask();
+    if (resultPtr != nullptr)
+        Matrix result = *resultPtr;
+   
 
     return 0;
 }

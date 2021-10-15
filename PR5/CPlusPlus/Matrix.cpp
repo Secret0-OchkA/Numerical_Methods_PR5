@@ -1,6 +1,9 @@
 #include "../Headers/Matrix.h"
 #include <cassert>
+#include <iostream>
 
+//prototipe for column_reset
+void add(Matrix&, unsigned int, unsigned int, const double);
 
 //+++++++++++++++++++++++++++++++++++//                              
 //           OTHER FUNCITONS         //
