@@ -1,2 +1,7 @@
-﻿  Practical_work_5.cpp
+﻿  Matrix.cpp
+D:\CodeProjects\PR5\PR5\CPlusPlus\Matrix.cpp(250,20): warning C4018: <: несоответствие типов со знаком и без знака
+D:\CodeProjects\PR5\PR5\CPlusPlus\Matrix.cpp(252,21): warning C4018: <: несоответствие типов со знаком и без знака
+D:\CodeProjects\PR5\PR5\CPlusPlus\Matrix.cpp(318,20): warning C4018: <: несоответствие типов со знаком и без знака
+D:\CodeProjects\PR5\PR5\CPlusPlus\Matrix.cpp(319,21): warning C4018: <: несоответствие типов со знаком и без знака
+D:\CodeProjects\PR5\PR5\CPlusPlus\Matrix.cpp(322,22): warning C4018: <: несоответствие типов со знаком и без знака
   PR5.vcxproj -> D:\CodeProjects\PR5\Debug\PR5.exe

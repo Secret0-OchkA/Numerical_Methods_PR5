@@ -177,32 +177,15 @@ const double Matrix::det() const
 		{
 			// Поиск ненулевого элента в столбце, лежащего ниже
 //**********// call swap_rows(...)
-			unsigned int index2swap = index_diag;
-			while ((index2swap < Copy.get_rSize()) && (Copy.get_elem(index2swap, index_diag) == 0.0))
-			{
-				index2swap = index2swap + 1;
-			}
+
 
 			// Проверка иссключения, если все элементы - нулевые => det = 0
 			// swap_rows(...) -> false => return det_value = 0.0;
 			// swap_rows(...) -> true => det_value = det_value * (-1.0);
-			if (index2swap == Copy.get_rSize())
+			if (swap_rows(index_diag, Copy))
 			{
 				return det_value = 0.0;
-			}
-			// Перестановка строк местами:
-			else
-			{
-				double buffer_value;
-				for (size_t col = index_diag; col < Copy.get_cSize(); col++)
-				{
-					buffer_value = Copy.get_elem(index_diag, col);
-					Copy.set_elem(index_diag, col, Copy.get_elem(index2swap, col));
-					Copy.set_elem(index2swap, col, buffer_value);
-				}
-
-				det_value = det_value * (-1.0); // т.к. при перестанове строк необходимо поменять определитель местами
-			}
+			}	
 		}
 
 		// Процесс исключения (будет запущен, только если) det != 0
@@ -218,23 +201,14 @@ const double Matrix::det() const
 
 		// Исключение элементов лежащих ниже диагональных:
 //******// call column_reset(...)
-		double swaped_value;
-		for (size_t row = index_diag + 1; row < Copy.get_rSize(); row++)
-		{
-			swaped_value = Copy.get_elem(row, index_diag);
-			Copy.set_elem(row, index_diag, 0.0);
-
-			for (size_t col = row; col < Copy.get_cSize(); col++)
-			{
-				add(Copy, row, col, - swaped_value * Copy.get_elem(index_diag, col));
-			}
-		}
+		column_reset(index_diag, Copy);
 
 		index_diag = index_diag + 1;
 	}
 
 	return det_value;
 }
+
 
 const double Matrix::norm() const
 {
