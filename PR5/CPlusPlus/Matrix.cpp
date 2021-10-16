@@ -1,6 +1,9 @@
 #include "../Headers/Matrix.h"
 #include <cassert>
+#include <algorithm>
 
+//prototipe for column_reset
+void add(Matrix&, unsigned int, unsigned int, const double);
 
 //+++++++++++++++++++++++++++++++++++//                              
 //           OTHER FUNCITONS         //
@@ -83,8 +86,8 @@ unsigned int Matrix::get_index(unsigned int row, unsigned int col) const
 	// => return row + col * this->rown;
 	// Смотри подробное описание в exel файле задания.
 	
-	//assert((col < this->coln) && "ERROR_MATRIX_INDEX_IS_OUT_SIZE"); // assert(bool = true)
-	//assert((row < this->rown) && "ERROR_MATRIX_INDEX_IS_OUT_SIZE");
+	assert((col < this->coln) && "ERROR_MATRIX_INDEX_IS_OUT_SIZE"); // assert(bool = true)
+	assert((row < this->rown) && "ERROR_MATRIX_INDEX_IS_OUT_SIZE");
 
 	return row + col * this->rown;
 }
@@ -234,7 +237,10 @@ const double Matrix::det() const
 
 const double Matrix::norm() const
 {
-	return 0.0;
+	std::vector<double> valuesSort = this->values;
+	std::sort(valuesSort.begin(), valuesSort.end(), [](double a, double b)->bool { return a > b; });
+
+	return valuesSort[0];
 }
 
 
@@ -294,13 +300,42 @@ Matrix operator-(const Matrix& left, const Matrix& right)
 	assert((left.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 	assert((left.get_rSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	return Matrix();
+	// 1. The matrix result is created there:
+	Matrix result(left.get_rSize(), left.get_cSize());
+
+	for (size_t j = 0; j < right.get_cSize(); j++)
+	{
+		for (size_t i = 0; i < right.get_rSize(); i++)
+		{
+			result.set_elem(i, j, left.get_elem(i, j) - right.get_elem(i, j));
+		}
+	}
+
+	return result;
 }
 
 Matrix operator*(const Matrix& left, const Matrix& right)
 {
 	// 0. Checking of the sizes:
+	assert((left.get_cSize() == right.get_rSize()) && "ERROR_MATRIX_L_CSIZE_SHOULD_BE_EQUAL_MATRIX_R_RSIZE");
+	assert((left.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
+	assert((left.get_rSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
+	assert((right.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
+	Matrix result = Matrix(left.get_rSize(), right.get_cSize());
 
-	return Matrix();
+	// C(MxN) = A(MxN) * B(NxP)
+	//c[i][j] = sum(n=1 -> A.col) { a[i][n] * b[n][j] }
+	for (int i = 0; i < result.get_rSize(); ++i)
+		for (int j = 0; j < result.get_cSize(); ++j)
+		{
+			double sum = 0;
+			for (int n = 0; n < left.get_cSize(); ++n)
+			{
+				sum += left.get_elem(i, n) * right.get_elem(n, j);
+			}
+			result.set_elem(i, j, sum);
+		}
+
+	return result;
 }
