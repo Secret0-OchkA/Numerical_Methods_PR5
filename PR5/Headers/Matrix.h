@@ -61,6 +61,7 @@ public:
 	// Операторы +=, -= и т.д. тоже лучше перегружать через методы класса.
 };
 
+std::ostream& operator<<(std::ostream& out, const Matrix& m);
 Matrix operator+(const Matrix& left, const Matrix& right);	// Исключение из тела класса, защищает данные от изменения.
 Matrix operator-(const Matrix& left, const Matrix& right);	// Для операторов +,-,/, если есть возможность, лучше использовать
 Matrix operator*(const Matrix& left, const Matrix& right);	// перегрузку через функции, как в данном примере.

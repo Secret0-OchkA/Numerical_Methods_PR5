@@ -27,7 +27,11 @@ int main()
     Matrix* resultPtr = solv.SolveTask();
     if (resultPtr != nullptr)
         Matrix result = *resultPtr;
+
+
+
    
 
     return 0;
 }
+

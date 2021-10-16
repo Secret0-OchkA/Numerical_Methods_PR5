@@ -11,8 +11,7 @@ class Decomposition
 {
 private:
 	// 0) Values:
-	std::vector <double> values;
-	unsigned int size;
+	Matrix values;
 
 public:
 	// 1) Constructors:

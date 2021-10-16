@@ -271,6 +271,20 @@ Matrix& Matrix::operator=(const Matrix& Any)
 	return *this;
 }
 
+std::ostream& operator<<(std::ostream& out, const Matrix& m)
+{
+	for (int i = 0; i < m.get_rSize(); ++i)
+	{
+		for (int j = 0; j < m.get_cSize(); ++j)
+		{
+			out << m.get_elem(i, j) << "\t";
+		}
+		out << std::endl;
+	}
+	out << std::endl;
+	return out;
+}
+
 Matrix operator+(const Matrix& left, const Matrix& right)
 {
 	// 0. Checking of the sizes:
@@ -340,3 +354,5 @@ Matrix operator*(const Matrix& left, const Matrix& right)
 
 	return result;
 }
+
+
