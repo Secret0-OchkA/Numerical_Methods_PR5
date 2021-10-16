@@ -7,7 +7,7 @@ Decomposition::Decomposition(const Matrix& any)
 {
     // 0. Checking of sizes. If matrix isn't square then error out!
     assert((any.get_cSize() == any.get_rSize()) && "ERROR_MATRIX_IS_NOT_SQUARE");
-    assert((any.get_cSize() == 0) && "ERROR_MATRIX_IS_EMPTY");
+    assert((any.get_cSize() != 0) && "ERROR_MATRIX_IS_EMPTY");
 
     // 1. The data is set there:
     

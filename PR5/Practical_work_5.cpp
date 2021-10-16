@@ -20,13 +20,16 @@ int main()
     
 
     // тест солвера
-    Matrix a = Matrix();
-    Matrix b = Matrix();
+    Matrix A = Matrix();
+    Matrix b = Matrix(2,1);
+    b.set_elem(0, 0, 1);
+    b.set_elem(1, 0, 2);
 
-    Solver solv(a, b, new TaskDecomposition());
-    Matrix* resultPtr = solv.SolveTask();
-    if (resultPtr != nullptr)
-        Matrix result = *resultPtr;
+    Solver sl(A,b, new TaskDecomposition());
+    Matrix* x_ptr = sl.SolveTask();
+    if (x_ptr != nullptr)
+        std::cout << *x_ptr << std::endl;
+
 
 
 
