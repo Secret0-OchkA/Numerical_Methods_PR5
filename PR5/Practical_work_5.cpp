@@ -27,13 +27,21 @@ int main()
 
     Solver sl(A,b, new TaskDecomposition());
     Matrix* x_ptr = sl.SolveTask();
+    Matrix decomposit;
     if (x_ptr != nullptr)
-        std::cout << *x_ptr << std::endl;
+        decomposit = *x_ptr;
 
+    sl.setTask(new TaskCramer());
+    x_ptr = sl.SolveTask();
+    Matrix cramer;
+    if (x_ptr != nullptr)
+        cramer = *x_ptr;
 
+    double delta_norm = decomposit.norm() - cramer.norm();
 
-
-   
+    std::cout << "decomposition:\n" << decomposit << std::endl;
+    std::cout << "cramer:\n" << cramer << std::endl;
+    std::cout << "delta_norm: " << delta_norm << std::endl;
 
     return 0;
 }
