@@ -12,7 +12,12 @@
 
 #include <iostream>
 #include <vector>
-
+#include <algorithm>
+#include <math.h>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
 
 class Matrix
 {
@@ -65,3 +70,8 @@ std::ostream& operator<<(std::ostream& out, const Matrix& m);
 Matrix operator+(const Matrix& left, const Matrix& right);	// Исключение из тела класса, защищает данные от изменения.
 Matrix operator-(const Matrix& left, const Matrix& right);	// Для операторов +,-,/, если есть возможность, лучше использовать
 Matrix operator*(const Matrix& left, const Matrix& right);	// перегрузку через функции, как в данном примере.
+
+Matrix read(std::string fullway2data);
+void print(const Matrix& Any, unsigned int precicion);
+void Save(const std::string& way, const std::string name, const Matrix& any);
+void Save(const std::string& way, const std::string name, const double num);

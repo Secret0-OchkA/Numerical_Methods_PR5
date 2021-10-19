@@ -2,6 +2,7 @@
 
 #include "Matrix.h"
 #include "Decomposition.h"
+#include <exception>
 
 class ITask
 {
@@ -35,7 +36,6 @@ private:
 	ITask* task;
 	Matrix& A;
 	Matrix& b;
-	Matrix* result;
 
 	Solver(const Solver& other);
 	void operator=(const Solver& other);
@@ -49,6 +49,6 @@ public:
 	void setTask(ITask* task);
 
 	//Methods
-	Matrix* SolveTask();
+	Matrix SolveTask();
 };
 

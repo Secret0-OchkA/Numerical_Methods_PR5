@@ -11,8 +11,9 @@ class Decomposition
 {
 private:
 	// 0) Values:
-	Matrix values;
-
+	//Matrix values;
+	Matrix low;
+	Matrix up;
 public:
 	// 1) Constructors:
 	Decomposition(const Matrix& any);

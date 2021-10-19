@@ -1,6 +1,6 @@
 #include "../Headers/Matrix.h"
 #include <cassert>
-#include <algorithm>
+
 
 
 //prototipe for column_reset
@@ -94,7 +94,7 @@ unsigned int Matrix::get_index(unsigned int row, unsigned int col) const
 }
 
 // 1) Ñonstructors:
-Matrix::Matrix() : values({10.0, -1.0, 1.0, 10.0}), rown(2), coln(2) {}
+Matrix::Matrix() : rown(0), coln(0) {}
 
 Matrix::Matrix(unsigned int rown, unsigned int coln) : coln(coln), rown(rown), values(coln * rown) {}
 
@@ -213,9 +213,9 @@ const double Matrix::det() const
 const double Matrix::norm() const
 {
 	std::vector<double> valuesSort = this->values;
-	std::sort(valuesSort.begin(), valuesSort.end(), [](double a, double b)->bool { return a > b; });
+	std::sort(valuesSort.begin(), valuesSort.end(), [](double a, double b)->bool { return std::abs(a) > std::abs(b); });
 
-	return valuesSort[0];
+	return std::abs(valuesSort[0]);
 }
 
 
@@ -330,3 +330,122 @@ Matrix operator*(const Matrix& left, const Matrix& right)
 }
 
 
+Matrix read(std::string fullway2data)
+{
+	std::ifstream inputfile;
+	inputfile.open(fullway2data);
+
+	Matrix Res;
+
+	if (inputfile.is_open())
+	{
+		std::string buff_s;
+		double buff_d;
+		std::vector <std::vector<double>> buff_data;
+		std::vector <double> buff_data_row;
+
+		while (getline(inputfile, buff_s))
+		{
+			std::istringstream buff_ss(buff_s);
+
+			while (buff_ss >> buff_d)
+			{
+				buff_data_row.push_back(buff_d);
+			}
+
+			buff_data.push_back(buff_data_row);
+			buff_data_row.clear();
+		}
+
+		Res = Matrix(buff_data.size(), buff_data.at(0).size());
+
+		for (size_t row = 0; row < Res.get_rSize(); row++)
+		{
+			assert((buff_data.at(row).size() == Res.get_cSize()) && "ERROR_COPIED_MATRIX_COLUMNS_SIZES_SHOULD_BE_EQUAL");
+
+			if (buff_data.at(row).size() != Res.get_cSize())
+			{
+				std::cout << "ERROR: copying matrix is failed! Process was stopped!" << std::endl;
+
+				return Res;
+			}
+
+			for (size_t col = 0; col < Res.get_cSize(); col++)
+			{
+				Res.set_elem(row, col, buff_data.at(row).at(col));
+			}
+		}
+	}
+	else
+	{
+		std::cout << "ERROR: copying matrix is failed! File isn't opened!" << std::endl;
+	}
+
+	return Res;
+}
+
+void print(const Matrix& Any, unsigned int precicion)
+{
+	if ((Any.get_rSize() == 0) || (Any.get_cSize() == 0))
+	{
+		std::cout << "WARNING: printed matrix is empty!" << std::endl;
+	}
+
+	for (size_t i = 0; i < Any.get_rSize(); i++)
+	{
+		for (size_t j = 0; j < Any.get_cSize(); j++)
+		{
+			std::cout << std::setprecision(precicion) << std::scientific << Any.get_elem(i, j) << "		";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void Save(const std::string& way, const std::string name, const Matrix& any)
+{
+	// The type conversion is there: 
+	const char* way_c = way.c_str();
+
+	// The object adds:
+	std::ofstream outf;
+
+	// The file opens:
+	outf.open(way_c, std::ios::app);
+
+	if (outf.is_open())
+	{
+		// The name output is there:
+		outf << name << std::endl;
+
+		// The values output is there:
+		for (size_t i = 0; i < any.get_rSize(); ++i)
+		{
+			for (size_t j = 0; j < any.get_cSize(); ++j)
+			{
+				outf << std::setprecision(16) << std::scientific << any.get_elem(i, j) << " ";
+			}
+			outf << std::endl;;
+		}
+	}
+}
+
+void Save(const std::string& way, const std::string name, const double num)
+{
+	// The type conversion is there: 
+	const char* way_c = way.c_str();
+
+	// The object adds:
+	std::ofstream outf;
+
+	// The file opens:
+	outf.open(way_c, std::ios::app);
+
+	if (outf.is_open())
+	{
+		// The name output is there:
+		outf << name << std::endl;
+
+		// The values output is there:
+		outf << std::setprecision(16) << std::scientific << num << std::endl;
+	}
+}

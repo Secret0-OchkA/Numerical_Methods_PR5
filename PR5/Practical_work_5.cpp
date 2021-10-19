@@ -7,6 +7,10 @@
 #include <vector>
 #include "Headers/Matrix.h"
 #include "Headers/Solver.h"
+#include <string>
+
+Matrix GetX(const size_t);
+std::string getTime(const char* = "%4i_%#02i_%#02i_time_%#02i_%#02i_%#02i");
 
 int main()
 {
@@ -18,31 +22,97 @@ int main()
     // Отключить все макросы необходимо добавив дерективу дял препроцессора в этом файле.
     // Добавление директивы пропусти добавление всех строк содержащих assert.
     
+    std::string fileWay = "D:\\CodeProjects\\PR5\\PR5\\1.txt";
 
-    // тест солвера
-    Matrix A = Matrix();
-    Matrix b = Matrix(2,1);
-    b.set_elem(0, 0, 1);
-    b.set_elem(1, 0, 2);
+    Matrix A = read(fileWay);
 
-    Solver sl(A,b, new TaskDecomposition());
-    Matrix* x_ptr = sl.SolveTask();
-    Matrix decomposit;
-    if (x_ptr != nullptr)
-        decomposit = *x_ptr;
+    Matrix x_exist = GetX(A.get_rSize());
+    Matrix b = A * x_exist;
+    Matrix x_LU;
+    Matrix x_Cramer;
 
-    sl.setTask(new TaskCramer());
-    x_ptr = sl.SolveTask();
-    Matrix cramer;
-    if (x_ptr != nullptr)
-        cramer = *x_ptr;
+    try
+    {
+        Solver sl(A, b, new TaskDecomposition());
+        x_LU = sl.SolveTask();
 
-    double delta_norm = decomposit.norm() - cramer.norm();
+        sl.setTask(new TaskCramer());
+        x_Cramer = sl.SolveTask();
+    }
+    catch (std::exception& ex)
+    {
+        std::cerr << ex.what();
+    }
 
-    std::cout << "decomposition:\n" << decomposit << std::endl;
-    std::cout << "cramer:\n" << cramer << std::endl;
-    std::cout << "delta_norm: " << delta_norm << std::endl;
+    double delta_norm = x_LU.norm() - x_Cramer.norm();
+
+    //++++++++++++++++++//
+    //   output data    //
+    //++++++++++++++++++//
+    std::cout << "A:\n";
+    print(A, 16);
+
+    std::cout << "decomposition:\n";
+    print(x_LU, 16);
+
+    std::cout << "cramer:\n";
+    print(x_Cramer, 16);
+
+    //1) || x_exist - x_Cramer ||
+    std::cout << "|| x_exist - x_Cramer || = " << (x_exist - x_Cramer).norm() << std::endl;
+
+    //2) || x_exist - x_LU ||
+    std::cout << "|| x_exist - x_LU || " << (x_exist - x_LU).norm() << std::endl;
+
+    //3) || x_Cramer - x_LU ||
+    std::cout << "|| x_Cramer - x_LU ||" << (x_Cramer - x_LU).norm() << std::endl;
+
+    const std::string saveWay = "D:\\CodeProjects\\PR5\\Reports\\";
+    const std::string filename = "data_" + getTime();
+    const std::string fullwayname = saveWay + filename + ".txt";
+
+    Save(fullwayname, "A", A);
+    Save(fullwayname, "b", b);
+    Save(fullwayname, "x_Exist", x_exist);
+
+    Save(fullwayname, "x_LU", x_LU);
+    Save(fullwayname, "x_Cramer", x_Cramer);
+
+    Save(fullwayname, "|| x_exist - x_Cramer ||", (x_exist - x_Cramer).norm());
+    Save(fullwayname, "|| x_exist - x_LU || ", (x_exist - x_LU).norm());
+    Save(fullwayname, "|| x_Cramer - x_LU ||", (x_Cramer - x_LU).norm());
 
     return 0;
 }
 
+Matrix GetX(const size_t row)
+{
+    Matrix res(row, 1);
+
+    for (int i = 0; i < row; ++i)
+    {
+        res.set_elem(i,0,i);
+    }
+
+    return res;
+}
+
+std::string getTime(const char* format)
+{
+    time_t now = time(0);
+    struct tm newtime;
+    localtime_s(&newtime, &now);
+
+    const int year = 1900 + newtime.tm_year;
+    const int month = 1 + newtime.tm_mon;
+    const int day = newtime.tm_mday;
+    const int hour = newtime.tm_hour;
+    const int minute = newtime.tm_min;
+    const int second = newtime.tm_sec;
+
+    char date[256];
+
+    sprintf_s(date, format, year, month, day, hour, minute, second);
+
+    return std::string(date);
+};

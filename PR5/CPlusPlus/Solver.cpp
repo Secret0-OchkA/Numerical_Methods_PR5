@@ -57,6 +57,9 @@ Matrix TaskDecomposition::Solve(const Matrix& A, const Matrix& b)
 
 bool TaskDecomposition::ExistSolution(const Matrix& A)
 {
+    double det = A.det();
+    if (det == 0)
+        throw std::logic_error("Decomposition: no exist solution for this data");
 	return A.det() != 0;
 }
 
@@ -79,7 +82,10 @@ Matrix TaskCramer::Solve(const Matrix& A, const Matrix& b)
 
 bool TaskCramer::ExistSolution(const Matrix& A)
 {
-	return A.det() != 0;
+    double det = A.det();
+    if (det == 0)
+        throw std::logic_error("Cramer: no exist solution for this data");
+    return A.det() != 0;
 }
 
 //+++++++++++++++++++++++++++++++++++//                              
@@ -87,10 +93,9 @@ bool TaskCramer::ExistSolution(const Matrix& A)
 //+++++++++++++++++++++++++++++++++++//
 
 Solver::Solver(Matrix& A, Matrix& b, ITask* task) :A(A),b(b),task(task) {}
+
 Solver::~Solver()
 {
-	if (result != nullptr)
-		delete result;
 	if (task != nullptr)
 		delete task;
 }
@@ -102,16 +107,10 @@ void Solver::setTask(ITask* task)
 	this->task = task;
 }
 
-Matrix* Solver::SolveTask()
+Matrix Solver::SolveTask()
 {
-	if (result != nullptr)
-		delete result;
-
-	if (task->ExistSolution(A))
-		this->result = new Matrix(task->Solve(A,b));
-	else
-		this->result = nullptr;
-	return result;
+    task->ExistSolution(A);
+    return Matrix(task->Solve(A, b));
 }
 
 
